@@ -1,0 +1,31 @@
+{
+  "name": "consulate-facebook",
+  "version": "0.1.0",
+  "description": "Facebook exchange plugin for consulate",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/consulate/consulate-facebook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/consulate/consulate-facebook/issues"
+  },
+  "keywords": [
+    "facebook",
+    "consulate"
+  ],
+  "author": "Cameron Bytheway <cameron@theflokk.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "passport": "~0.1.17",
+    "passport-facebook": "~0.1.5"
+  },
+  "devDependencies": {
+    "should": "~1.2.2",
+    "mocha": "~1.11.0"
+  }
+}
