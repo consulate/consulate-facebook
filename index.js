@@ -23,7 +23,7 @@ module.exports = function(options) {
   }));
 
   return function(app) {
-    app.use(path, app.authenticate('facebook', getUserByFacebookOrCreate), function(req, res, next) {
+    app.get(path, app.authenticate('facebook', getUserByFacebookOrCreate), function(req, res, next) {
       // The user didn't end up logging in through facebook
       // TODO figure out how to pass on the error to the login page
       res.redirect('/login');
