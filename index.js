@@ -8,50 +8,25 @@ var passport = require('passport')
  * Facebook Exchange Plugin
  */
 
-exports = module.exports = function(options) {
+module.exports = function(options) {
   var path = options.path || '/auth/facebook'
     , getUserByFacebookOrCreate = options.getUserByFacebookOrCreate;
 
+  passport.use(new FacebookStrategy({
+    clientID: options.clientID,
+    clientSecret: options.clientSecret,
+    callbackURL: options.callbackURL
+  }, function(accessToken, refreshToken, profile, done) {
+    profile.accessToken = accessToken;
+    profile.refreshToken = refreshToken;
+    done(null, profile);
+  }));
+
   return function(app) {
-
-    passport.use(new FacebookStrategy({
-      clientID: options.clientID,
-      clientSecret: options.clientSecret,
-      callbackURL: options.callbackURL
-    }, function(accessToken, refreshToken, profile, done) {
-      profile.accessToken = accessToken;
-      profile.refreshToken = refreshToken;
-      done(null, profile);
-    }));
-
-    app.use(path, exports.login(getUserByFacebookOrCreate));
-  };
-};
-
-// TODO put a lot of this code into a reusable lib
-exports.login = function(getUserByFacebookOrCreate) {
-  return function(req, res, next) {
-    // We want to do some custom handling here
-    passport.authenticate('facebook', function(err, facebookUser, info) {
-      if (err) return next(err);
-
+    app.use(path, app.authenticate('facebook', getUserByFacebookOrCreate), function(req, res, next) {
       // The user didn't end up logging in through facebook
-      if (!facebookUser) return res.redirect('/login');
-
-      getUserByFacebookOrCreate(facebookUser, function(err, user) {
-        if (err) return next(err);
-
-        req.logIn(user, function(err) {
-          if (err) return next(err);
-
-          var returnTo = req.session.returnTo;
-          // Delete it
-          delete req.session.returnTo;
-
-          // Redirect to where we came from
-          return res.redirect(returnTo);
-        });
-      });
-    })(req, res, next);
+      // TODO figure out how to pass on the error to the login page
+      res.redirect('/login');
+    });
   };
 };
