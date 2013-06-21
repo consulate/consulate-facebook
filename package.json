@@ -22,7 +22,8 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "passport": "~0.1.17",
-    "passport-facebook": "~0.1.5"
+    "passport-facebook": "~0.1.5",
+    "simple-debug": "~1.1.0"
   },
   "devDependencies": {
     "should": "~1.2.2",

@@ -1,7 +1,8 @@
 /**
  * Module dependencies
  */
-var passport = require('passport')
+var debug = require('simple-debug')('consulate-facebook')
+  , passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 /**
@@ -11,6 +12,8 @@ var passport = require('passport')
 module.exports = function(options) {
   var path = options.path || '/auth/facebook'
     , getUserByFacebookOrCreate = options.getUserByFacebookOrCreate;
+
+  debug('registering facebook passport strategy with options', options)
 
   passport.use(new FacebookStrategy({
     clientID: options.clientID,
@@ -23,10 +26,6 @@ module.exports = function(options) {
   }));
 
   return function(app) {
-    app.get(path, app.authenticate('facebook', getUserByFacebookOrCreate), function(req, res, next) {
-      // The user didn't end up logging in through facebook
-      // TODO figure out how to pass on the error to the login page
-      res.redirect('/login');
-    });
+    app.get(path, app.authenticate('facebook', getUserByFacebookOrCreate), app.viewCallback('login'));
   };
 };
