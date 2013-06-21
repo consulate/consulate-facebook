@@ -9,17 +9,15 @@ var debug = require('simple-debug')('consulate-facebook')
  * Facebook Exchange Plugin
  */
 
-module.exports = function(options) {
-  var path = options.path || '/auth/facebook'
-    , getUserByFacebookOrCreate = options.getUserByFacebookOrCreate;
+module.exports = function(options, getUserByFacebookOrCreate) {
+  if (!getUserByFacebookOrCreate) throw new Error('`getUserByFacebookOrCreate` callback required for `consulate-facebook`');
+
+  var path = options.path || '/auth/facebook';
+  delete options.path;
 
   debug('registering facebook passport strategy with options', options)
 
-  passport.use(new FacebookStrategy({
-    clientID: options.clientID,
-    clientSecret: options.clientSecret,
-    callbackURL: options.callbackURL
-  }, function(accessToken, refreshToken, profile, done) {
+  passport.use(new FacebookStrategy(options, function(accessToken, refreshToken, profile, done) {
     profile.accessToken = accessToken;
     profile.refreshToken = refreshToken;
     done(null, profile);
