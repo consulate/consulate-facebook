@@ -15,11 +15,9 @@ module.exports = function(options, getUserByFacebookOrCreate) {
   var path = options.path || '/login/facebook';
   delete options.path;
 
-  debug('registering facebook passport strategy with options', options)
-
-  passport.use(new FacebookStrategy(options, getUserByFacebookOrCreate));
-
   return function(app) {
+    debug('registering facebook passport strategy with options', options);
+    app.register(new FacebookStrategy(options, getUserByFacebookOrCreate))
     app.get(path, app.authenticate('facebook'), app.viewCallback('login'));
   };
 };
