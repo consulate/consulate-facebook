@@ -21,7 +21,7 @@ app.plugin(facebook({
   clientID: 'MY_FACEBOOK_CLIENT_ID',
   clientSecret: 'MY_FACEBOOK_CLIENT_SECRET',
   callbackURL: 'MY_FACEBOOK_CALLBACK_URL'
-}, function(facebookUser, done) {
+}, function(accessToken, refreshToken, profile, done) {
 
   // lookup user by facebook id here. if they don't exist create them
   ...

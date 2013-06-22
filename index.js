@@ -12,18 +12,14 @@ var debug = require('simple-debug')('consulate-facebook')
 module.exports = function(options, getUserByFacebookOrCreate) {
   if (!getUserByFacebookOrCreate) throw new Error('`getUserByFacebookOrCreate` callback required for `consulate-facebook`');
 
-  var path = options.path || '/auth/facebook';
+  var path = options.path || '/login/facebook';
   delete options.path;
 
   debug('registering facebook passport strategy with options', options)
 
-  passport.use(new FacebookStrategy(options, function(accessToken, refreshToken, profile, done) {
-    profile.accessToken = accessToken;
-    profile.refreshToken = refreshToken;
-    done(null, profile);
-  }));
+  passport.use(new FacebookStrategy(options, getUserByFacebookOrCreate));
 
   return function(app) {
-    app.get(path, app.authenticate('facebook', getUserByFacebookOrCreate), app.viewCallback('login'));
+    app.get(path, app.authenticate('facebook'), app.viewCallback('login'));
   };
 };
