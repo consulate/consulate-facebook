@@ -2,7 +2,6 @@
  * Module dependencies
  */
 var debug = require('simple-debug')('consulate-facebook')
-  , passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 /**
