@@ -14,12 +14,18 @@ module.exports = function(options, getUserByFacebookOrCreate) {
   var path = options.path || '/login/facebook';
   delete options.path;
 
+  var name = options.name || 'facebook';
+
+  if (!options.callbackURL) options.callbackURL = path;
+
   var authOpts = options.authOpts || {};
   delete options.authOpts;
 
   return function(app) {
     debug('registering facebook passport strategy with options', options);
-    app.register(new FacebookStrategy(options, getUserByFacebookOrCreate))
-    app.get(path, app.authenticate('facebook', authOpts), app.viewCallback('login'));
+    var strategy = new FacebookStrategy(options, getUserByFacebookOrCreate);
+    strategy.name = name;
+    app.register(strategy);
+    app.get(path, app.authenticate(name, authOpts), app.viewCallback('login'));
   };
 };
